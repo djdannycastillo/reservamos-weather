@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import WeatherDaily from './WeatherDaily';
 import WeatherHeader from './WeatherHeader';
 
@@ -22,6 +22,8 @@ function CityWeather({ city }) {
             const resp = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&lang=es&units=metric&appid=${API_KEY}`);
             const weather_resp = await resp.json();
 
+            console.log(weather_resp);
+
             setWeather(weather_resp);
             setIsLoading(false);
         } catch (error) {
@@ -30,14 +32,19 @@ function CityWeather({ city }) {
     }
 
     const WeatherContent = () => {
-        if (weather) {
+        if (weather && weather.code === 200) {
             return (<>
                 <WeatherHeader cityName={city_name} weather={weather} />
                 <WeatherDaily weather={weather} />
             </>)
         }
         
-        return null
+        return(
+            <View>
+                <Text>Ha ocurrido un error:</Text>
+                <Text>{weather?.message}</Text>
+            </View>
+        )
     }
 
     return (
