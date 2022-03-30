@@ -6,6 +6,9 @@ import { dateFormat, tempFormat } from '../../utils';
 const { width } = Dimensions.get('screen');
 
 function WeatherDaily({ weather }) {
+    const daily = [...weather.daily];
+    const filteredTempAsc = daily?.sort((a, b) => b.humidity - a.humidity);
+
     return (
         <View style={styles.dailyContainer}>
             <Text style={styles.title}>Temperatura</Text>
@@ -23,7 +26,7 @@ function WeatherDaily({ weather }) {
 
                         <View style={styles.dailyHumidity}>
                             <Icon name="droplet" size={12} color="#9E9E9E" />
-                            <Text style={styles.littleText}>{item.humidity}%</Text>
+                            <Text style={[styles.littleText, filteredTempAsc[0].humidity === item.humidity ? styles.colorRed : styles.colorGray ]}>{item.humidity}%</Text>
                         </View>
                     </View>
                 ))}
@@ -69,6 +72,13 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
         justifyContent: 'flex-end'
+    },
+    colorRed: {
+        color: 'red',
+        fontWeight: '600'
+    },
+    colorGray: {
+        color: 'gray'
     }
 });
 
